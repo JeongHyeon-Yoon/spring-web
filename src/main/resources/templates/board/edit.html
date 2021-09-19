@@ -1,0 +1,111 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/boardLayout}">
+
+<div layout:fragment="content">
+
+    <div class="panel-heading">Edit Page</div>
+    <div class="panel-body">
+
+        <form id='f1' th:action="@{/}" method="post" enctype="multipart/form-data">
+
+
+            <div class="form-group">
+                <label>BoardSeq</label> <input class="form-control" name="boardSeq"
+                                          th:value="${board.boardSeq}" readonly="readonly" />
+            </div>
+
+            <div class="form-group">
+                <label>Title</label> <input class="form-control" name="title"
+                                            th:value="${board.title}" />
+                <p class="help-block">Title text here.</p>
+            </div>
+
+            <div class="form-group">
+                <label>Content</label>
+                <textarea class="form-control" rows="3" name='content'
+                          th:text="${board.content}"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Writer</label> <input class="form-control" name="writer"
+                                             th:value="${board.writer}" readonly="readonly" />
+            </div>
+
+            <input type='hidden' name="page" th:value="${pageVO.page}"> <input
+                type='hidden' name="size" th:value="${pageVO.size}"> <input
+                type='hidden' name="type" th:value="${pageVO.type}"> <input
+                type='hidden' name="keyword" th:value="${pageVO.keyword}">
+            <input type="hidden" th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}" />
+            <div>
+                첨부파일:
+                <div class="form-group">
+                    <label>AttachFiles</label>
+                    <input type="file" class="form-control" name="files"  multiple="multiple" />
+                </div>
+                <ul th:each="file:${board.files}">
+                    <li>
+                        <a th:href="|/board/files/${file.fileSeq}|"  th:text="${file.originFileName}"></a>
+                        <a th:href="|/board/files/delete/${file.fileSeq}|" >X</a>
+                    </li>
+                </ul>
+            </div>
+        </form>
+
+        <div class="form-group">
+            <label>RegDate</label> <input class="form-control" name="regDate"
+                                          th:value="${#dates.format(board.regDate,'yyyy-MM-dd')}"
+                                          readonly="readonly" />
+        </div>
+
+        <div class="pull-right">
+
+            <a href="#" class="btn btn-warning modbtn">Modify</a>
+
+            <a href="#" class="btn btn-danger delbtn">Delete</a>
+
+            <a th:href="@{ list(page=${pageVO.page},
+			                size=${pageVO.size},
+			                type=${pageVO.type},
+			                keyword=${pageVO.keyword},
+			                boardSeq = ${board.boardSeq}
+			             )}" class="btn btn-primary">Cancel & Go List</a>
+        </div>
+
+    </div>
+
+</div>
+<!--  end fragment -->
+
+<th:block layout:fragment="script">
+
+    <script th:inline="javascript">
+	$(document).ready(function(){
+
+		var formObj = $("#f1");
+
+		$(".delbtn").click(function(){
+
+			formObj.attr("action","delete");
+			formObj.attr("method", "post");
+
+			formObj.submit();
+
+		});
+
+		$(".modbtn").click(function(){
+
+			formObj.attr("action","edit");
+			formObj.attr("method", "post");
+
+			formObj.submit();
+
+		});
+
+
+	});
+	</script>
+
+</th:block>
