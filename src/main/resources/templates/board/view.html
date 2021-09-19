@@ -37,6 +37,11 @@
                                           th:value="${#dates.format(board.regDate,'yyyy-MM-dd')}"
                                           readonly="readonly" />
         </div>
+        <div class="form-group">
+            <label>updateDate</label> <input class="form-control" name="updateDate"
+                                          th:value="${#dates.format(board.updateDate,'yyyy-MM-dd')}"
+                                          readonly="readonly" />
+        </div>
         <div>
             첨부파일:
             <ul th:each="file:${board.files}">
